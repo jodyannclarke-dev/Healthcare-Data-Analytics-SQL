@@ -13,13 +13,62 @@ The raw data for this project was sourced from the "Hospital Management Dataset"
 ## Comprehensive Database Schema
 This analysis was performed on a multi-table relational database structure, utilizing the following five tables:
 
+## 3. Database Schema
 
+This analysis was performed on a multi-table relational database structure, utilizing the following five tables:
 
-*   `patients` (patient_id, first_name, ...)
-*   `doctors` (doctor_id, specialization, ...)
-*   `appointments` (appointment_id, patient_id, doctor_id, ...)
-*   `treatments` (treatment_id, appointment_id, ...)
-*   `billing` (bill_id, treatment_id, amount, ...)
+### Table: `patients` (Demographic Data)
+
+| Column Name | Data Type (BigQuery) | Description |
+| :--- | :--- | :--- |
+| **`patient_id`** | `STRING` | **Primary Key (PK)**. Unique identifier for each patient. |
+| `first_name` | `STRING` | Patient's first name. |
+| `last_name` | `STRING` | Patient's last name. |
+| `date_of_birth` | `DATE` | Patient's birth date. Used for age calculations. |
+| `gender` | `STRING` | Biological gender (e.g., 'Male', 'Female', 'Other'). |
+| `zip_code` | `STRING` | Patient's geographical location (used for regional analysis). |
+
+### Table: `doctors` (Provider Data)
+
+| Column Name | Data Type (BigQuery) | Description |
+| :--- | :--- | :--- |
+| **`doctor_id`** | `STRING` | **Primary Key (PK)**. Unique identifier for each doctor. |
+| `first_name` | `STRING` | Doctor's first name. |
+| `last_name` | `STRING` | Doctor's last name. |
+| `specialization` | `STRING` | Medical field of expertise (e.g., 'Orthopedics', 'Cardiology'). |
+| `years_of_experience` | `INT64` | Doctor's tenure/experience level. |
+
+### Table: `appointments` (Operational/Scheduling Data)
+
+| Column Name | Data Type (BigQuery) | Description |
+| :--- | :--- | :--- |
+| **`appointment_id`** | `STRING` | **Primary Key (PK)**. Unique identifier for the appointment record. |
+| **`patient_id`** | `STRING` | **Foreign Key (FK)**. Links to the `patients` table. |
+| **`doctor_id`** | `STRING` | **Foreign Key (FK)**. Links to the `doctors` table. |
+| `appointment_date` | `TIMESTAMP` | The scheduled date and time of the appointment. |
+| `status` | `STRING` | Appointment result (e.g., 'Completed', **'No-Show'**, 'Canceled'). |
+| `wait_time_minutes` | `INT64` | Time patient waited (used for efficiency metrics). |
+
+### Table: `treatments` (Clinical/Procedure Data)
+
+| Column Name | Data Type (BigQuery) | Description |
+| :--- | :--- | :--- |
+| **`treatment_id`** | `STRING` | **Primary Key (PK)**. Unique identifier for the treatment performed. |
+| **`appointment_id`** | `STRING` | **Foreign Key (FK)**. Links back to the `appointments` table. |
+| `procedure_code` | `STRING` | Standard medical code (e.g., CPT/HCPCS) for the treatment. |
+| `treatment_description` | `STRING` | Plain text description of the service rendered. |
+| `duration_minutes` | `INT64` | Length of the procedure (used for cost/revenue weighting). |
+
+### Table: `billing` (Financial Data)
+
+| Column Name | Data Type (BigQuery) | Description |
+| :--- | :--- | :--- |
+| **`bill_id`** | `STRING` | **Primary Key (PK)**. Unique identifier for the bill. |
+| **`treatment_id`** | `STRING` | **Foreign Key (FK)**. Links to the specific treatment performed. |
+| `amount_due` | `FLOAT64` | Total amount charged for the service. |
+| `payment_status` | `STRING` | Current status (e.g., 'Paid', 'Pending', **'Aged Receivables'**). |
+| `billing_date` | `DATE` | The date the bill was generated. |
+| `due_date` | `DATE` | The date payment is expected. |
 
 ## Key Analyses & Insights
 
