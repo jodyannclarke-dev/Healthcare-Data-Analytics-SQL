@@ -48,7 +48,7 @@ The database contained 5 tables:
         Total_Billed_Revenue DESC
     LIMIT 5;
     ```
-*   **Results & Insight:** The query successfully identified the top 5 earners. This insight would allow management to explore what high-performing doctors (e.g., in Orthopedics) are doing differently.
+*   **Results & Insight:** The query successfully identified the top 5 earners. This insight would allow management to explore what high-performing doctors (e.g., in Dermatology) are doing differently.
 
-    ![Screenshot of BigQuery Results for Doctor Revenue](https*://...your_screenshot_url...)
+    ![Screenshot of BigQuery Results for Doctor Revenue](<img width="639" height="167" alt="Image" src="https://github.com/user-attachments/assets/0b66387b-0ab4-4e64-8f5e-6cdbfc94099b" />)
 
