@@ -1,7 +1,5 @@
-# Healthcare-Data-Analytics-SQL
-An advanced SQL portfolio on Google BigQuery analyzing a healthcare database. Demonstrates Window Functions, CTEs, & Subqueries to solve business problems like physician revenue & aged receivables. Also features CASE statements, multi-table JOINs, & COALESCE for data cleaning & business logic.
-
 # Healthcare Operations Analysis in SQL (BigQuery)
+An advanced SQL portfolio on Google BigQuery analyzing a healthcare database. Demonstrates Window Functions, CTEs, & Subqueries to solve business problems like physician revenue & aged receivables. Also features CASE statements, multi-table JOINs, & COALESCE for data cleaning & business logic.
 
 ## Project Objective
 The goal of this project was to act as a Data Analyst for a hospital. I analyzed a multi-table relational database to identify key drivers of revenue, track billing efficiency, and understand patient-doctor interactions.
@@ -50,5 +48,5 @@ The database contained 5 tables:
     ```
 *   **Results & Insight:** The query successfully identified the top 5 earners. This insight would allow management to explore what high-performing doctors (e.g., in Dermatology) are doing differently.
 
-    ![Screenshot of BigQuery Results for Doctor Revenue](<img width="639" height="167" alt="Image" src="https://github.com/user-attachments/assets/0b66387b-0ab4-4e64-8f5e-6cdbfc94099b" />)
+    ![Top Doctor Revenue Results in BigQuery](images/doctor_revenue_results.png)
 
