@@ -1,2 +1,2 @@
 # Healthcare-Data-Analytics-SQL
-Solving real-world healthcare business problems with Advanced SQL. This portfolio project uses Window Functions, CTEs, Subqueries, &amp; JOINs to analyze physician revenue, patient billing (aged receivables), &amp; operational efficiency. Also features CASE statements &amp; COALESCE for data cleaning &amp; business logic.
+An advanced SQL portfolio on Google BigQuery analyzing a healthcare database. Demonstrates Window Functions, CTEs, & Subqueries to solve business problems like physician revenue & aged receivables. Also features CASE statements, multi-table JOINs, & COALESCE for data cleaning & business logic.
