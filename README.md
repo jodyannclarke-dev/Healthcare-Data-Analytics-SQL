@@ -10,8 +10,10 @@ The raw data for this project was sourced from the "Hospital Management Dataset"
 *   **Source:** https://www.kaggle.com/datasets/kanakbaghel/hospital-management-dataset
 *   **Process:** I personally uploaded the CSV files to a private project in Google BigQuery, established the table relationships, and used BigQuery's SQL engine for all analysis.
 
-## Database Schema
-The database contained 5 tables:
+## Comprehensive Database Schema
+This analysis was performed on a multi-table relational database structure, utilizing the following five tables:
+
+
 
 *   `patients` (patient_id, first_name, ...)
 *   `doctors` (doctor_id, specialization, ...)
