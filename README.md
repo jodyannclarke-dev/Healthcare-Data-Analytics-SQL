@@ -112,5 +112,43 @@ ORDER BY
 
     ![Physician Revenue Performance Results in BigQuery](images/physician_revenue_performance.png)
 
+### Analysis 2: Patient Lifetime Cost & Utilization
 
+*   **Business Question:** What are the top 5 highest-cost patients by cumulative billed treatments, and how can this metric be used to identify high-utilization patients for targeted case management or risk stratification?
+
+*   **My SQL Query:**
+```SQL
+
+-- Objective: Calculate the total lifetime billed cost for every patient, 
+-- limited to the top 5 for reporting purposes.
+SELECT
+    p.first_name,
+    p.last_name,
+    p.patient_id,
+    -- Using b.amount as the billed financial value
+    COALESCE(SUM(b.amount), 0.0) AS Total_Cost_for_Treatments
+FROM 
+    `bio_analytics.patients` AS p
+-- 1. Link patient to appointments
+LEFT JOIN
+    `bio_analytics.appointments` AS a
+    ON p.patient_id = a.patient_id
+-- 2. Link appointment to treatment
+LEFT JOIN
+    `bio_analytics.treatments` AS t
+    ON a.appointment_id = t.appointment_id
+-- 3. Link treatment to billing (where the cost data is)
+LEFT JOIN
+    `bio_analytics.billing` AS b
+    ON t.treatment_id = b.treatment_id
+GROUP BY
+    p.patient_id,
+    p.first_name,
+    p.last_name
+ORDER BY
+    Total_Cost_for_Treatments DESC
+LIMIT 5; 
+```
+Results & Insight: This query successfully identifies the Top 5 highest-cost patients, providing management with an immediate list for risk analysis. This cohort often represents patients with complex or chronic care needs, and these costs directly impact the hospital's budget. The query demonstrates the ability to join four tables correctly, aggregate data using SUM(), and use the LIMIT clause for professional, summarized reporting. This is a foundational step for implementing cost-reduction strategies like disease management or preventative care programs.
     
+![Physician Revenue Performance Results in BigQuery](images/physician_revenue_performance.png)
