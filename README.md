@@ -151,4 +151,4 @@ LIMIT 5;
 ```
 Results & Insight: This query successfully identifies the Top 5 highest-cost patients, providing management with an immediate list for risk analysis. This cohort often represents patients with complex or chronic care needs, and these costs directly impact the hospital's budget. The query demonstrates the ability to join four tables correctly, aggregate data using SUM(), and use the LIMIT clause for professional, summarized reporting. This is a foundational step for implementing cost-reduction strategies like disease management or preventative care programs.
     
-![Physician Revenue Performance Results in BigQuery](images/physician_revenue_performance.png)
+![Patient Lifetime Cost & Utilization Results in BigQuery](images/patient_billing_amount.png)
