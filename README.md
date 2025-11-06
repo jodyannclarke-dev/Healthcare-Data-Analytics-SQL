@@ -72,36 +72,7 @@ This analysis was performed on a multi-table relational database structure, util
 
 ## Key Analyses & Insights
 
-### Analysis 1: Doctor Revenue Report
-
-*   **Business Question:** Which doctors are generating the most revenue for the hospital?
-*   **My SQL Query:**
-    ```sql
-    -- This query joins all 4 tables to connect doctors to billing
-    SELECT
-        d.first_name,
-        d.last_name,
-        d.specialization,
-        SUM(b.amount) AS Total_Billed_Revenue
-    FROM
-        `bio_analytics.doctors` AS d
-    JOIN
-        `bio_analytics.appointments` AS a ON d.doctor_id = a.doctor_id
-    JOIN
-        `bio_analytics.treatments` AS t ON a.appointment_id = t.appointment_id
-    JOIN
-        `bio_analytics.billing` AS b ON t.treatment_id = b.treatment_id
-    GROUP BY
-        d.first_name, d.last_name, d.specialization
-    ORDER BY
-        Total_Billed_Revenue DESC
-    LIMIT 5;
-    ```
-*   **Results & Insight:** The query successfully identified the top 5 earners. This insight would allow management to explore what high-performing doctors (e.g., in Dermatology) are doing differently.
-
-    ![Top Doctor Revenue Results in BigQuery](images/doctor_revenue_results.png)
-
-### Analysis 2: Physician Revenue Performance
+### Analysis 1: Physician Revenue Performance
 
 *   **Business Question:** Which doctors and specializations drive the highest total billed revenue, and how does this information inform resource allocation and financial forecasting for the hospital?
 *   **My SQL Query:**
@@ -137,9 +108,9 @@ GROUP BY
 ORDER BY
     Total_Billed_Revenue DESC;
 ```
-*   **Results & Insight:** This query generates the foundation for the hospital's financial performance reports. By calculating the Total_Billed_Revenue and ordering the results, we can immediately identify high-impact specialties and individual top earners (e.g., if Orthopedics generates 40% of revenue, management should prioritize its resources). The use of LEFT JOIN ensures that doctors who have yet to generate revenue (e.g., new hires) are still included in the report with a NULL or zero revenue value, providing a complete picture for management rather than just showing active accounts.
+*   **Results & Insight:** This query generates the foundation for the hospital's financial performance reports. By calculating the Total_Billed_Revenue and ordering the results, we can immediately identify high-impact specialties and individual top earners (e.g., if Dermatology generates 40% of revenue, management should prioritize its resources). The use of LEFT JOIN ensures that doctors who have yet to generate revenue (e.g., new hires) are still included in the report with a NULL or zero revenue value, providing a complete picture for management rather than just showing active accounts.
 
-    ![Physician Revenue Performance Results in BigQuery](images/doctor_revenue_results.png)
+    ![Physician Revenue Performance Results in BigQuery](images/physician_revenue_performance.png)
 
 
     
