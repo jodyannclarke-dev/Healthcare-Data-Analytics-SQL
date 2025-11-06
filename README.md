@@ -17,58 +17,69 @@ This analysis was performed on a multi-table relational database structure, util
 
 This analysis was performed on a multi-table relational database structure, utilizing the following five tables:
 
-### Table: `patients` (Demographic Data)
+### Table: `Patients` (Demographic and Contact Data)
 
-| Column Name | Data Type (BigQuery) | Description |
+| Field Name | Type | Description |
 | :--- | :--- | :--- |
-| **`patient_id`** | `STRING` | **Primary Key (PK)**. Unique identifier for each patient. |
+| **`patient_id`** | `STRING` | **Primary Key (PK)**. Unique patient identifier. |
 | `first_name` | `STRING` | Patient's first name. |
 | `last_name` | `STRING` | Patient's last name. |
-| `date_of_birth` | `DATE` | Patient's birth date. Used for age calculations. |
-| `gender` | `STRING` | Biological gender (e.g., 'Male', 'Female', 'Other'). |
-| `zip_code` | `STRING` | Patient's geographical location (used for regional analysis). |
+| `gender` | `STRING` | Biological gender. |
+| `date_of_birth` | `DATE` | Patient's date of birth (used for age analysis). |
+| `contact_number` | `INTEGER` | Patient's primary phone number. |
+| `address` | `STRING` | Patient's physical address. |
+| `registration_date` | `DATE` | Date the patient first registered. |
+| `insurance_provider` | `STRING` | Patient's primary health insurance carrier. |
+| `insurance_number` | `STRING` | Patient's insurance policy identifier. |
+| `email` | `STRING` | Patient's email address. |
 
-### Table: `doctors` (Provider Data)
+### Table: `Doctors` (Provider Data)
 
-| Column Name | Data Type (BigQuery) | Description |
+| Field Name | Type | Description |
 | :--- | :--- | :--- |
-| **`doctor_id`** | `STRING` | **Primary Key (PK)**. Unique identifier for each doctor. |
+| **`doctor_id`** | `STRING` | **Primary Key (PK)**. Unique doctor identifier. |
 | `first_name` | `STRING` | Doctor's first name. |
 | `last_name` | `STRING` | Doctor's last name. |
-| `specialization` | `STRING` | Medical field of expertise (e.g., 'Orthopedics', 'Cardiology'). |
-| `years_of_experience` | `INT64` | Doctor's tenure/experience level. |
+| `specialization` | `STRING` | Medical field of expertise (e.g., 'Cardiology'). |
+| `phone_number` | `INTEGER` | Doctor's contact number. |
+| `years_experience` | `INTEGER` | Doctor's professional experience tenure. |
+| `hospital_branch` | `STRING` | Hospital branch where the doctor practices. |
+| `email` | `STRING` | Doctor's email address. |
 
-### Table: `appointments` (Operational/Scheduling Data)
+### Table: `Appointments` (Scheduling Data)
 
-| Column Name | Data Type (BigQuery) | Description |
+| Field Name | Type | Description |
 | :--- | :--- | :--- |
-| **`appointment_id`** | `STRING` | **Primary Key (PK)**. Unique identifier for the appointment record. |
-| **`patient_id`** | `STRING` | **Foreign Key (FK)**. Links to the `patients` table. |
-| **`doctor_id`** | `STRING` | **Foreign Key (FK)**. Links to the `doctors` table. |
-| `appointment_date` | `TIMESTAMP` | The scheduled date and time of the appointment. |
-| `status` | `STRING` | Appointment result (e.g., 'Completed', **'No-Show'**, 'Canceled'). |
-| `wait_time_minutes` | `INT64` | Time patient waited (used for efficiency metrics). |
+| **`appointment_id`** | `STRING` | **Primary Key (PK)**. Unique appointment identifier. |
+| **`patient_id`** | `STRING` | **Foreign Key (FK)**. Links to the `Patients` table. |
+| **`doctor_id`** | `STRING` | **Foreign Key (FK)**. Links to the `Doctors` table. |
+| `appointment_date` | `DATE` | Scheduled date of the appointment. |
+| `appointment_time` | `TIME` | Scheduled time of the appointment. |
+| `reason_for_visit` | `STRING` | Patient's stated reason for seeking care. |
+| `status` | `STRING` | Outcome (e.g., 'Completed', 'No-Show', 'Canceled'). |
 
-### Table: `treatments` (Clinical/Procedure Data)
+### Table: `Treatments` (Clinical Procedure and Cost Data)
 
-| Column Name | Data Type (BigQuery) | Description |
+| Field Name | Type | Description |
 | :--- | :--- | :--- |
-| **`treatment_id`** | `STRING` | **Primary Key (PK)**. Unique identifier for the treatment performed. |
-| **`appointment_id`** | `STRING` | **Foreign Key (FK)**. Links back to the `appointments` table. |
-| `procedure_code` | `STRING` | Standard medical code (e.g., CPT/HCPCS) for the treatment. |
-| `treatment_description` | `STRING` | Plain text description of the service rendered. |
-| `duration_minutes` | `INT64` | Length of the procedure (used for cost/revenue weighting). |
+| **`treatment_id`** | `STRING` | **Primary Key (PK)**. Unique treatment identifier. |
+| **`appointment_id`** | `STRING` | **Foreign Key (FK)**. Links to the `Appointments` table. |
+| `treatment_type` | `STRING` | Categorization of the procedure (e.g., 'Surgery'). |
+| `description` | `STRING` | Detailed description of the service rendered. |
+| `cost` | `FLOAT` | **Direct cost of the treatment.** |
+| `treatment_date` | `DATE` | **Date the treatment was administered.** |
 
-### Table: `billing` (Financial Data)
+### Table: `Billing` (Financial Transactions)
 
-| Column Name | Data Type (BigQuery) | Description |
+| Field Name | Type | Description |
 | :--- | :--- | :--- |
-| **`bill_id`** | `STRING` | **Primary Key (PK)**. Unique identifier for the bill. |
-| **`treatment_id`** | `STRING` | **Foreign Key (FK)**. Links to the specific treatment performed. |
-| `amount_due` | `FLOAT64` | Total amount charged for the service. |
-| `payment_status` | `STRING` | Current status (e.g., 'Paid', 'Pending', **'Aged Receivables'**). |
-| `billing_date` | `DATE` | The date the bill was generated. |
-| `due_date` | `DATE` | The date payment is expected. |
+| **`bill_id`** | `STRING` | **Primary Key (PK)**. Unique bill identifier. |
+| **`patient_id`** | `STRING` | **Foreign Key (FK)**. Links directly to the `Patients` table. |
+| **`treatment_id`** | `STRING` | **Foreign Key (FK)**. Links to the `Treatments` table. |
+| `bill_date` | `DATE` | Date the bill was generated. |
+| `amount` | `FLOAT` | **Amount billed to the patient.** |
+| `payment_method` | `STRING` | Method of payment. |
+| `payment_status` | `STRING` | Status of payment (e.g., 'Paid', 'Pending'). |
 
 ## Key Analyses & Insights
 
