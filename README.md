@@ -125,4 +125,74 @@ LIMIT 5; -- Limits the result set to the top performers for concise reporting
 
 *   **Results & Insight:** This query successfully identifies the Top 5 physician revenue generators, which directly informs executive strategy. The high ranking of certain specialties (e.g., Orthopedics or Cardiology) suggests where specialization investment should be focused. The individual revenue figures are used to determine performance bonuses, and this data dictates resource allocation, ensuring high-performing doctors have adequate staff and equipment to maintain productivity. The combined use of aggregation and the LIMIT clause provides concise, actionable KPI data.
 
-BigQuery Results
+    ![BigQuery Results](images/doctor_revenue.png)
+
+### Analysis 2: Aged Accounts Receivable Report
+
+*   **Business Question:** Which patients currently have 'Pending' bills older than 30 days, and how does identifying the top 5 oldest accounts inform the collections strategy and financial risk management?
+
+*   **My SQL Query:**
+
+```SQL
+
+-- Objective: List the top 5 oldest patient bills that are still in 'Pending' status.
+-- This represents high-priority accounts for collections/follow-up.
+SELECT
+    p.patient_id,
+    p.first_name,
+    p.last_name,
+    b.bill_date,
+    b.amount,
+    b.payment_status
+FROM
+    `bio_analytics.patients` AS p
+-- Join Patient table directly to Billing table (b) using the correct FK: patient_id
+LEFT JOIN
+    `bio_analytics.billing` AS b
+    ON p.patient_id = b.patient_id
+WHERE
+    -- Filter 1: Identify all bills with a 'Pending' status
+    LOWER(b.payment_status) = 'pending'
+AND
+    -- Filter 2: Identify bills older than 30 days, using 2023-12-01 as the current date
+    b.bill_date < DATE_SUB(DATE('2023-12-01'), INTERVAL 30 DAY)
+ORDER BY
+    b.bill_date ASC -- Oldest bills first
+LIMIT 5; -- Limits the result set to the top 5 oldest pending bills
+```
+
+*   **Results & Insight:** This query directly identifies the top 5 patients with the oldest 'Pending' bills, which are the highest priority targets for follow-up. This data immediately informs the collections strategy by providing a prioritized list for high-risk accounts. Pursuing these specific, aged debts improves the hospital's overall cash flow and is a proactive measure in financial risk management to prevent these balances from moving to costly 'collections' status.
+
+    ![BigQuery Results](images/aged_accounts_receivable.png)
+
+### Analysis 3: Identifying High-Value Procedures Post-July 2023
+
+*   **Business Question:** Which treatments administered after July 1st, 2023, exceeded a critical high-cost threshold of $4,800, and how can isolating these specific, expensive services assist in focused cost and pricing audits?
+
+*   **My SQL Query:**
+
+```SQL
+
+-- Objective: Retrieve treatments administered since 2023-07-01 
+-- that exceed a high-cost threshold of $4,800.
+SELECT
+    t.treatment_type,
+    t.description,
+    t.cost,
+    t.treatment_date
+FROM
+    `bio_analytics.treatments` AS t
+WHERE
+    -- Filter 1: Identify treatments administered in the second half of the year
+    t.treatment_date >= DATE('2023-07-01')
+AND
+    -- Filter 2: Apply the high-cost threshold
+    t.cost > 4800.00
+ORDER BY
+    t.cost DESC,
+    t.treatment_date DESC;
+```
+*   **Results & Insight:** This query directly isolates treatments costing over $4,800 and performed after July 1st, 2023. By identifying these specific, high-cost services—along with their type and description—the output provides the precise data needed for focused cost and pricing audits. This allows the finance team to immediately flag outliers and investigate potential issues related to billing accuracy or supply chain expenses associated with the hospital's most expensive procedures.
+
+    ![BigQuery Results](images/high_value_procedures.png)
+
