@@ -196,3 +196,30 @@ ORDER BY
 
     ![BigQuery Results](images/high_value_procedures.png)
 
+### Analysis 4: Specialization Appointment Volume and Capacity
+
+*   **Business Question:** Which medical specializations handle the highest volume of appointments, and how does this information dictate resource allocation, staffing levels, and clinic capacity planning across the hospital?
+
+*   **My SQL Query:**
+
+```SQL
+
+-- Objective: Calculate the total number of appointments handled by each doctor specialization.
+SELECT
+    d.specialization,
+    COUNT(a.appointment_id) AS Total_Appointments
+FROM
+    `bio_analytics.doctors` AS d
+-- Join to Appointments table to count utilization
+LEFT JOIN
+    `bio_analytics.appointments` AS a
+    ON d.doctor_id = a.doctor_id
+GROUP BY
+    d.specialization
+ORDER BY
+    Total_Appointments DESC;
+```
+*   **Results & Insight:** This query provides a vital measure of demand and utilization by showing which specializations handle the greatest appointment volume. The specializations at the top of this list (e.g., General Practice or Pediatrics) are flagged for increased resource allocation (more exam rooms, higher staffing). The results directly inform capacity planning by identifying departments that may be bottlenecks or require additional doctor recruitment. The use of LEFT JOIN ensures that specializations that have not yet had an appointment are still listed with a count of 0, providing a complete view of the current staffing landscape.
+
+    ![BigQuery Results](images/specialization_appointment.png)
+
