@@ -223,3 +223,55 @@ ORDER BY
 
     ![BigQuery Results](images/specialization_appointment.png)
 
+### Analysis 5: Top-Spending Patient Ranking by Insurance (Advanced)
+
+*   **Business Question:** Who are the top 2 highest-spending patients within each insurance provider group, and how does this stratification inform contract negotiations and risk assessment for high-utilization member cohorts?
+
+* My SQL Query:
+
+```SQL
+
+-- Objective: Identify the top 2 most expensive patients per insurance provider 
+-- using CTEs and the DENSE_RANK() window function.
+WITH PatientSpending AS (
+    -- CTE 1: Calculate Total Cost per Patient. 
+    -- Requires linking Billing (for patient_id) to Treatments (for cost).
+    SELECT
+        b.patient_id,
+        SUM(t.cost) AS total_spent
+    FROM
+        `bio_analytics.billing` AS b
+    JOIN
+        `bio_analytics.treatments` AS t
+        ON b.treatment_id = t.treatment_id
+    GROUP BY
+        b.patient_id
+),
+-- CTE 2: Rank patients based on total spending, partitioned by insurance provider.
+RankedSpending AS (
+    SELECT
+        p.patient_id,
+        p.insurance_provider,
+        ps.total_spent,
+        -- Window Function: Ranks patients by spending within each insurance group
+        DENSE_RANK() OVER (PARTITION BY p.insurance_provider ORDER BY ps.total_spent DESC) AS cost_rank
+    FROM
+        `bio_analytics.patients` AS p
+    JOIN
+        PatientSpending AS ps ON p.patient_id = ps.patient_id
+)
+-- Final Select: Filter for only the top 2 ranked patients in each group
+SELECT
+    patient_id,
+    insurance_provider,
+    total_spent,
+    cost_rank
+FROM
+    RankedSpending
+WHERE
+    cost_rank <= 2;
+```
+
+*   **Results & Insight:** This query is crucial for risk stratification and strategic planning. By isolating the top 2 highest-cost patients within every insurance group using CTEs and the DENSE_RANK() Window Function, the data enables the hospital's executive team to conduct detailed reviews. This information directly influences contract negotiations by highlighting high-utilization cohorts within specific providers and allows for targeted risk assessment of member populations that are driving the highest costs for the facility.
+
+    ![BigQuery Results](images/top_spending_patients.png)
